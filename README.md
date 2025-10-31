@@ -1,6 +1,6 @@
 # Investigating LLM Rule Articulation in Classification Tasks
 
-This project investigates how well a Large Language Model (LLM) can articulate in natural language the rules it uses for a classification task. Specifically, the research question explores whether LLMs can learn tasks very accurately (>90% accuracy on held-out examples) without being able to articulate the simple, human-understandable rule they have learned.
+This project investigates how well a Large Language Model (LLM) can articulate in natural language the rules it uses for a classification task. Specifically, the research question explores whether LLMs can learn tasks very accurately (>90% accuracy on held-out examples) without being able to articulate the simple, human-understandable rule they have learned.  Suggested by Owain Evans.
 
 ## Methodology
 
