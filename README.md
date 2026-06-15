@@ -1,6 +1,60 @@
 # Investigating LLM Rule Articulation in Classification Tasks
 
-This project investigates how well a Large Language Model (LLM) can articulate in natural language the rules it uses for a classification task. Specifically, the research question explores whether LLMs can learn tasks very accurately (>90% accuracy on held-out examples) without being able to articulate the simple, human-understandable rule they have learned.  Suggested by Owain Evans.
+> Completed as a take-home for the **Astra Fellowship**; the research question
+> was suggested by **Owain Evans**. The notebook
+> ([`Grant_Larsen's_Astra_take_home_Owain_Evans.ipynb`](Grant_Larsen's_Astra_take_home_Owain_Evans.ipynb))
+> contains the full code and outputs.
+
+This project investigates how well a Large Language Model (LLM) can articulate in natural language the rules it uses for a classification task. Specifically, the research question explores whether LLMs can learn tasks very accurately (>90% accuracy on held-out examples) without being able to articulate the simple, human-understandable rule they have learned.
+
+## Summary
+
+Across 13 binary classification tasks, an LLM was taught a rule purely through
+few-shot examples (no rule stated), tested on held-out examples, and then asked
+to state the rule it had inferred. For each task I measured two things: **how
+accurately it classified** and **whether the rule it articulated matched the
+true generating rule** ("faithfulness").
+
+**Headline finding:** on most tasks the model both classified well *and*
+articulated the true rule faithfully. The interesting cases are where the two
+come apart — the model can score highly while describing a rule that is *not*
+the one that generated the data, and it tends to articulate a confident,
+plausible-but-wrong rule rather than express uncertainty.
+
+| Task | Accuracy | Articulated rule faithful? |
+| --- | --- | --- |
+| Careful Garbage | 100% | ✅ Yes |
+| Arithmetic Sequences | 100% | ✅ Yes |
+| Bible Translation | 100% | ✅ Yes |
+| Book ID | 100% | ✅ Yes |
+| Is/Ought | 100% | ✅ Yes |
+| Animal Sounds | 100% | ✅ Yes |
+| Advice (locus of control) | 100% | ✅ Yes |
+| Koans vs Riddles | 98% | ✅ Yes |
+| He/She | 96% | ✅ Yes |
+| Short Chess Games | 93% | ✅ Yes |
+| Testament Comparison | 86% | ✅ Yes (on the subset it got right) |
+| Quadratics | 74% | ❌ No — claimed "factors over integers" vs. true "has real roots" |
+| News Paragraphs | 71% | ❌ No — guessed by "journalistic plausibility" vs. true source (Guardian vs. Fox) |
+
+## Where articulation breaks down
+
+The two most informative results are the failures:
+
+- **Quadratics (74%):** the true rule is "has real roots" (`b² ≥ 4ac`). The
+  model confidently articulated a *related but inequivalent* rule — "factors
+  into integer linear factors" — which is strictly stronger and explains the
+  degraded accuracy. It reasoned its way to a clean, wrong hypothesis rather
+  than the messier correct one.
+- **News Paragraphs (71%):** the true rule was source (The Guardian = True,
+  Fox News = False). The model never recovered this; it classified by perceived
+  "journalistic authenticity" and, to its credit, explicitly flagged that it
+  was guessing — the one case where it surfaced its own uncertainty.
+
+A reasonable read: faithful articulation is easy when the rule is a crisp
+surface feature (capitalization, pronoun gender, presence of "ought") and gets
+unreliable when the true rule is statistical, source-based, or close to a
+"neater" alternative the model prefers.
 
 ## Methodology
 
@@ -340,10 +394,9 @@ Faithfulness: The articulated rule is not faithful to the actual classification 
 
 1.  **Clone the repository:**
     ```bash
-    git clone <repository_url>
-    cd <repository_name>
+    git clone https://github.com/larsen-ge/articulating-learned-rules.git
+    cd articulating-learned-rules
     ```
-    (Replace `<repository_url>` and `<repository_name>` with the actual GitHub repository details once available.)
 
 2.  **Install required libraries:**
     Open a terminal or command prompt in the repository directory and run the following command:
@@ -363,7 +416,7 @@ Faithfulness: The articulated rule is not faithful to the actual classification 
         (Replace `'YOUR_OPENROUTER_KEY'` and `'YOUR_ANTHROPIC_KEY'` with your actual keys). The notebook code expects `OpenRouterKey` and `ClaudeAPIkey` to be set.
 
 4.  **Run the Notebook:**
-    The notebook can be run in a Jupyter environment, such as Google Colab. Upload or open the `investigating_llm_rule_articulation.ipynb` file in your chosen environment and run the cells sequentially. Ensure your API keys are correctly configured before running the API interaction cells.
+    The notebook can be run in a Jupyter environment, such as Google Colab. Upload or open the `Grant_Larsen's_Astra_take_home_Owain_Evans.ipynb` file in your chosen environment and run the cells sequentially. Ensure your API keys are correctly configured before running the API interaction cells.
 
 ## License
 
